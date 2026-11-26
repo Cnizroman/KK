@@ -18,7 +18,7 @@
  document.documentElement.dataset.clubState='loading';
  if(status){status.hidden=false;status.firstElementChild.textContent='Получаем расписание клуба…'}if(retry)retry.hidden=true;
  try{
-  var response=await fetch('/api/public',{cache:'no-store',signal:active.signal});if(!response.ok)throw new Error('API unavailable');
+  var response=await fetch('api/public.json' /*FIXED-GH1: на GitHub Pages нет сервера /api — берём снимок данных из файла*/,{cache:'no-store',signal:active.signal});if(!response.ok)throw new Error('API unavailable');
   var data=await response.json();window.KK_PUBLIC=data;
   var club=data.clubs[0],address=club?club.city+', '+club.address:'Краснодар, ул. 1 Мая, 498';
   function makeMedia(m){

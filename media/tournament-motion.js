@@ -112,7 +112,7 @@ const scenes={
  'globe-orbit.svg':'deal','chip-stack.svg':'merge','card-wave.svg':'fan','chip-constellation.svg':'roll',
 };
 export function motionSceneFor(source){
- const match=typeof source==='string'&&source.match(/^(?:\.\/|\/)media\/(?:scenes\/)?([^/?#]+)(?:[?#].*)?$/);
+ const match=typeof source==='string'&&source.match(/media\/(?:scenes\/)?([^/?#]+)(?:[?#].*)?$/) /*FIXED-GH2: без привязки к началу пути — работает и в подпапке /KK/ на GitHub Pages, и на боевом домене*/;
  return match&&scenes[match[1]]||null;
 }
 const labels={deal:'Две карты раздаются и открываются',merge:'Фишки собираются из двух стопок в одну',fan:'Карты раскрываются в выигрышную комбинацию',roll:'Золотая фишка катится и ложится возле карт'};
