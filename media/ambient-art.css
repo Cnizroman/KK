@@ -1,0 +1,47 @@
+/* Autonomous material loops. Outer layout/GSAP transforms remain untouched. */
+.motion-art{position:relative;isolation:isolate;perspective:650px;pointer-events:none;--art-phase:-.4s;--art-cycle:6.4s;--art-lift:6px;--art-swing:7deg}
+.motion-art>.motion-art-body{display:block;position:absolute;inset:0;background-image:var(--art-image);background-repeat:no-repeat;background-size:var(--art-grid,200% 200%);background-position:var(--art-pos,0% 0%);transform-origin:50% 50%;animation:kk-chip-turn var(--art-cycle) ease-in-out var(--art-phase) infinite;backface-visibility:hidden}
+.motion-art-sheen{position:absolute;inset:0;display:block;pointer-events:none;overflow:hidden;-webkit-mask-image:var(--art-image);mask-image:var(--art-image);-webkit-mask-size:var(--art-grid,200% 200%);mask-size:var(--art-grid,200% 200%);-webkit-mask-position:var(--art-pos,0% 0%);mask-position:var(--art-pos,0% 0%);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.motion-art-sheen>i{display:block;position:absolute;top:-25%;left:0;width:48%;height:150%;border-radius:0;background:linear-gradient(90deg,transparent,#fff4c329 25%,#fff7d8b8 49%,#ffffffd9 51%,#fff4c329 76%,transparent);transform:translateX(-180%) skewX(-24deg);opacity:0;mix-blend-mode:screen;animation:kk-metal-sweep 5.8s ease-in-out var(--art-phase) infinite}
+.motion-chip:before{content:'';position:absolute;left:20%;right:20%;bottom:0;height:9%;border-radius:50%;background:radial-gradient(ellipse,#e6c97336,transparent 72%);animation:kk-art-shadow var(--art-cycle) ease-in-out var(--art-phase) infinite}
+.motion-medal>.motion-art-body{transform-origin:50% 15%;animation-name:kk-medal-swing;animation-duration:5.4s}
+.motion-trophy>.motion-art-body{animation-name:kk-trophy-lift;animation-duration:7s}
+.motion-gift>.motion-art-body{animation-name:kk-gift-rock;animation-duration:5.8s}
+.motion-ticket>.motion-art-body,.motion-cards>.motion-art-body{animation-name:kk-ticket-float;animation-duration:6s}
+.motion-trophy:after,.motion-gift:after{content:'✦';position:absolute;right:10%;top:8%;color:#fff0b6;font:18px/1 Georgia,serif;pointer-events:none;animation:kk-art-spark 4.8s ease-in-out var(--art-phase) infinite}
+.motion-art.art-locked{--art-lift:2px;--art-swing:3deg}.motion-art.art-locked .motion-art-sheen{opacity:.24}
+.m.lock .motion-art{--art-lift:2px;--art-swing:3deg}
+.tournament-card:nth-child(2n) .motion-art,.film:nth-child(2n) .motion-art{--art-phase:-2.6s;--art-cycle:7.3s}
+.tournament-card:nth-child(3n) .motion-art,.film:nth-child(3n) .motion-art{--art-phase:-4.2s;--art-cycle:5.8s}
+.medal-tile:nth-child(2n) .motion-art{--art-phase:-2.1s}.medal-tile:nth-child(3n) .motion-art{--art-phase:-3.7s}
+/* Existing homepage artwork uses the same motion surfaces as the React pages. */
+.motion-cover{position:absolute;right:8px;bottom:8px;width:82px;height:82px;z-index:2;filter:drop-shadow(0 5px 9px #000a)}
+.motion-cover>.painted-film-chip{position:absolute;inset:0;display:block;width:100%;height:100%;filter:none}
+.motion-medal-home{display:block;width:100%;height:100%}
+.prize-illustrations>.motion-art{background:none}
+.prize-trophy{--art-image:url('art/kk-prizes-v3.webp');--art-pos:0% 0%;--art-phase:-1.7s}
+.prize-gift{--art-image:url('art/kk-prizes-v3.webp');--art-pos:0% 100%;--art-phase:-3.1s}
+.prize-ticket{--art-image:url('art/kk-prizes-v3.webp');--art-pos:100% 0%;--art-phase:-.7s}
+/* Ornament trails and task badges move without changing their values. */
+.ornament g{transform-box:fill-box;transform-origin:center;animation:kk-ornament-drift 15s ease-in-out infinite}
+.ornament path{stroke-dasharray:340 45;animation:kk-ornament-trace 22s linear infinite}
+.ornament path:nth-child(2){animation-direction:reverse;animation-duration:27s}
+.ring[data-p]{isolation:isolate}
+.ambient-ring-orbit{position:absolute;inset:0;z-index:2;pointer-events:none;animation:kk-ring-orbit 9s linear infinite}
+.ambient-ring-orbit:before{content:'';position:absolute;left:calc(50% - 2px);top:2px;width:4px;height:4px;border-radius:50%;background:#f0d78c;box-shadow:0 0 7px #e6c97399}
+.q:nth-of-type(2n) .ambient-ring-orbit{animation-direction:reverse;animation-delay:-4s}
+@keyframes kk-chip-turn{0%,100%{transform:translate3d(0,2px,0) rotateX(8deg) rotateY(-25deg) rotateZ(-7deg)}48%{transform:translate3d(0,calc(-1 * var(--art-lift)),0) rotateX(-9deg) rotateY(29deg) rotateZ(8deg)}}
+@keyframes kk-medal-swing{0%,100%{transform:translate3d(0,1px,0) rotateY(-12deg) rotateZ(calc(-1 * var(--art-swing)))}50%{transform:translate3d(0,calc(-1 * var(--art-lift)),0) rotateY(18deg) rotateZ(var(--art-swing))}}
+@keyframes kk-trophy-lift{0%,100%{transform:translate3d(0,2px,0) rotateY(-14deg) rotateZ(-4deg)}50%{transform:translate3d(0,-8px,0) rotateY(17deg) rotateZ(4deg)}}
+@keyframes kk-gift-rock{0%,100%{transform:translate3d(0,1px,0) rotateZ(-5deg) rotateY(-10deg)}45%{transform:translate3d(0,-6px,0) rotateZ(5deg) rotateY(14deg)}65%{transform:translate3d(0,-3px,0) rotateZ(2deg) rotateY(8deg)}}
+@keyframes kk-ticket-float{0%,100%{transform:translate3d(0,2px,0) rotateX(9deg) rotateY(-16deg) rotateZ(-4deg)}50%{transform:translate3d(0,-6px,0) rotateX(-8deg) rotateY(17deg) rotateZ(3deg)}}
+@keyframes kk-metal-sweep{0%,15%{transform:translateX(-180%) skewX(-24deg);opacity:0}24%{opacity:.8}42%{transform:translateX(360%) skewX(-24deg);opacity:0}100%{transform:translateX(360%) skewX(-24deg);opacity:0}}
+@keyframes kk-art-shadow{0%,100%{transform:scaleX(1);opacity:.65}48%{transform:scaleX(.66);opacity:.2}}
+@keyframes kk-art-spark{0%,40%,72%,100%{transform:scale(.15) rotate(0deg);opacity:0}54%{transform:scale(1) rotate(75deg);opacity:.8}64%{transform:scale(.5) rotate(120deg);opacity:.3}}
+@keyframes kk-ornament-drift{0%,100%{transform:translate(-4px,2px) rotate(-2deg)}50%{transform:translate(5px,-3px) rotate(2deg)}}
+@keyframes kk-ornament-trace{to{stroke-dashoffset:-770}}
+@keyframes kk-ring-orbit{to{transform:rotate(360deg)}}
+/* Pausing saves work; visibility never sets animation progress or starts a reveal. */
+[data-ambient-paused] .motion-art-body,[data-ambient-paused] .motion-art-sheen>i,[data-ambient-paused].motion-art:before,[data-ambient-paused].motion-art:after,[data-ambient-paused].ornament g,[data-ambient-paused].ornament path,[data-ambient-paused].ambient-ring-orbit,
+.art-motion-paused .motion-art-body,.art-motion-paused .motion-art-sheen>i,.art-motion-paused .motion-art:before,.art-motion-paused .motion-art:after,.art-motion-paused .ornament g,.art-motion-paused .ornament path,.art-motion-paused .ambient-ring-orbit{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.motion-art>.motion-art-body,.motion-art-sheen>i,.motion-art:before,.motion-art:after,.ornament g,.ornament path,.ambient-ring-orbit{animation:none!important;transform:none}.motion-art-sheen,.motion-trophy:after,.motion-gift:after,.ambient-ring-orbit{display:none}}

@@ -1,0 +1,12 @@
+/* Shared navigation: original homepage dock, used on every page. */
+.dock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;align-items:center;gap:2px;padding:6px;border-radius:999px;background:#003440ed;backdrop-filter:blur(22px) saturate(1.5);-webkit-backdrop-filter:blur(22px) saturate(1.5);border:1px solid #e6c97366;box-shadow:0 22px 50px -14px #000,inset 0 1px 0 #ffffff14;z-index:45;max-width:calc(100% - 20px)}
+.dock .ni{display:flex;flex-direction:row;align-items:center;justify-content:center;flex-shrink:0;gap:0;height:44px;min-height:44px;min-width:46px;padding:0 13px;border:0;border-radius:999px;background:transparent;color:#97bfc1;font:inherit;text-decoration:none;cursor:pointer;position:relative;transition:background .45s,color .35s,box-shadow .45s,transform .3s cubic-bezier(.22,1,.36,1);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.dock .ni svg{width:21px;height:21px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .45s cubic-bezier(.22,1,.36,1)}
+.dock .nl{display:block;max-width:0;opacity:0;margin-left:0;overflow:hidden;white-space:nowrap;font:600 12.5px/normal 'Golos Text',sans-serif;letter-spacing:.08em;text-transform:uppercase;transition:max-width .6s cubic-bezier(.22,1,.36,1),opacity .35s,margin-left .6s cubic-bezier(.22,1,.36,1)}
+.dock .ni.on{background:linear-gradient(135deg,#f3dc98,#e6c973 70%,#b18e3c);color:#003541;box-shadow:0 8px 22px -8px #e7b75abf,inset 0 1px 0 #ffffff8c}
+.dock .ni.on .nl{max-width:96px;opacity:1;margin-left:8px}
+.dock .ni:active{transform:scale(.9)}
+.dock .ni.on svg{animation:nip .6s cubic-bezier(.22,1,.36,1)}
+.dock .ni:focus-visible{outline:2px solid #f3d68f;outline-offset:3px}
+@keyframes nip{0%{transform:scale(.7) rotate(-14deg)}100%{transform:none}}
+@media(prefers-reduced-motion:reduce){.dock .ni,.dock .nl,.dock .ni svg,.dock .ni.on svg{transition:none;animation:none}}

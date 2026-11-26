@@ -1,0 +1,1 @@
+window.KK_TOURS={royal:{at:0,seats:1,taken:0}};
