@@ -28,8 +28,8 @@ body{margin:0;font-family:'Golos Text',sans-serif;font-variant-numeric:lining-nu
 .hero{min-height:100svh;height:auto;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:calc(clamp(160px,25svh,220px) + 150px) 20px max(90px,calc(70px + env(safe-area-inset-bottom)))}
 .bars:before,.bars:after{content:"";position:absolute;left:0;right:0;height:9vh;background:#000;z-index:5}.bars:before{top:0}.bars:after{bottom:0}
 .spot{position:absolute;inset:0;background:radial-gradient(55% 40% at 50% 38%,rgba(0,131,149,.35),transparent 70%)}
-/* FIXED-1 (исправлено): было top:clamp(160px,25svh,220px) + scale(.5) — фишка 220px, сверху/снизу по ~100px пустоты. Стало: top:210px + scale(.75) — фишка 330px, пустота убрана. Полёт фишки НЕ ломается: посадка считается от логотипа в JS (см. FIXED-2). */
-.stage{position:absolute;left:50%;top:210px;width:440px;height:440px;margin:-220px 0 0 -220px;perspective:1600px;z-index:2;transform:scale(.75);cursor:pointer}
+/* FIXED-1 v2 (2026-11-26, по feedback: «фишка слишком выставлена вперёд»): было top:clamp(160px,25svh,220px)+scale(.5) — фишка 220px и ~100px пустоты сверху. Промежуточный вариант scale(.75) делал фишку 330px — на телефоне она почти касалась краёв экрана. Стало: top:190px + scale(.64) — фишка 282px, по центру с полями ~54px, пустота сверху убрана. Полёт НЕ ломается: посадка считается от логотипа в JS (см. FIXED-2). */
+.stage{position:absolute;left:50%;top:190px;width:440px;height:440px;margin:-220px 0 0 -220px;perspective:1600px;z-index:2;transform:scale(.64);cursor:pointer}#heroCopy{position:relative;z-index:3}
 .tilt{width:100%;height:100%;transform-style:preserve-3d}
 #fx{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none}
 .glare{position:absolute;inset:0;border-radius:50%;pointer-events:none;background:radial-gradient(circle at var(--gx,30%) var(--gy,24%),rgba(255,244,214,.55),rgba(255,244,214,0) 46%);mix-blend-mode:soft-light}
@@ -443,11 +443,11 @@ function scheduleChipLayout(){
 }
 function syncChipDock(){
  if(!chipFlight||!chipGeometry||!chipSetTransform)return;
- /* FIXED-2 (исправлено): базовый scale фишки .5 -> .75 (см. FIXED-1). Посадочный scale НЕ трогаем — он считается от логотипа (g.scale), поэтому фишка по-прежнему прилетает точно в логотип. */
+ /* FIXED-2 v2: базовый scale фишки синхронизирован с FIXED-1 v2 (.64; фазы: .64+.28e / .92-.49e). Посадочный scale НЕ трогаем — он считается от логотипа (g.scale), поэтому фишка по-прежнему прилетает точно в логотип. */
  var t=chipDock.travel,g=chipGeometry,u,e,x=0,y=0,scale=.75;
  // Every frame derives from progress and fresh viewport geometry, never a cached transform.
- if(t<=.28){u=t/.28;e=chipEases.lift(u);y=g.lift*e;scale=.75+.33*e}
- else if(t<=.64){u=(t-.28)/.36;e=chipEases.turn(u);x=g.x*.22*e;y=g.lift+(g.y*.35-g.lift)*e;scale=1.08-.57*e}
+ if(t<=.28){u=t/.28;e=chipEases.lift(u);y=g.lift*e;scale=.64+.28*e}
+ else if(t<=.64){u=(t-.28)/.36;e=chipEases.turn(u);x=g.x*.22*e;y=g.lift+(g.y*.35-g.lift)*e;scale=.92-.49*e}
  else{u=(t-.64)/.36;e=chipEases.land(u);x=g.x*(.22+.78*e);y=g.y*(.35+.65*e);scale=.51+(g.scale-.51)*e}
  chipSetTransform({x:x,y:y,scale:scale});
  chipFlight.classList.toggle('is-travelling',t>.001&&t<.999);
@@ -457,7 +457,8 @@ function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 function aim(cx,cy){var c=chipCentre;if(!c){var r=stageEl.getBoundingClientRect();c={x:r.left+r.width/2,y:r.top+r.height/2}}T.y=clamp((cx-c.x)/(innerWidth*.5),-1,1)*26;T.x=-clamp((cy-c.y)/(innerHeight*.5),-1,1)*26;idleAt=performance.now()}
 addEventListener('pointermove',function(e){aim(e.clientX,e.clientY)},{passive:true});
 addEventListener('touchmove',function(e){aim(e.touches[0].clientX,e.touches[0].clientY)},{passive:true});
-addEventListener('deviceorientation',function(e){if(e.gamma==null)return;T.y=clamp(e.gamma,-30,30)*.85;T.x=-clamp(e.beta-50,-30,30)*.85;idleAt=performance.now()});
+/* FIXED-4 (2026-11-26, по feedback: фишка «слишком выставлена вперёд» на телефоне): наклон от датчика телефона ослаблен вдвое (было *.85 и ±30°, стало *.45 и ±16°) — фишка больше не задиралась к зрителю при наклоне телефона. Вращение и полёт не тронуты. */
+addEventListener('deviceorientation',function(e){if(e.gamma==null)return;T.y=clamp(e.gamma,-16,16)*.45;T.x=-clamp(e.beta-50,-16,16)*.45;idleAt=performance.now()});
 new IntersectionObserver(function(en){heroOn=en[0].isIntersecting},{threshold:0}).observe(document.getElementById('hero'));
 function physics(now){requestAnimationFrame(physics);var dt=Math.min(.033,(now-lastT)/1000);lastT=now;
  var dock=chipDock.progress;
@@ -465,7 +466,7 @@ function physics(now){requestAnimationFrame(physics);var dt=Math.min(.033,(now-l
  chipDock.landed=false;
  if(!heroOn&&dock===0)return;
  auto+=dt*34;
- if(now-idleAt>2500){T.y=Math.sin(now/1700)*11;T.x=Math.sin(now/2300)*6}
+ if(now-idleAt>2500){T.y=Math.sin(now/1700)*7;T.x=Math.sin(now/2300)*4} /* FIXED-4: покачивание в простое спокойнее (было 11/6) */
  var k=260,c=2*Math.sqrt(k);['x','y'].forEach(function(a){var v='v'+a;P[v]+=(k*(T[a]+(a==='y'?spin+auto:0)-P[a])-c*P[v])*dt;P[a]+=P[v]*dt});
  var yaw=P.y+chipFlip.rotation;
  if(dock>0&&!chipDock.wasMoving)chipDock.restYaw=Math.ceil(yaw/360)*360;
